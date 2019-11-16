@@ -1,3 +1,4 @@
+import 'package:chat_ui/screens/home.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
@@ -5,12 +6,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('My App'),
-        ),
-        body: Text('Hello World ! from flutter'),
-      ),
+      title: "Let's Chat",
+      debugShowCheckedModeBanner: false,
+      theme:
+          ThemeData(primarySwatch: Colors.red, accentColor: Color(0xFFFEF9EB), selectedRowColor: Color(0xFFFFEFEE)),
+      home: Home(),
     );
   }
 }
