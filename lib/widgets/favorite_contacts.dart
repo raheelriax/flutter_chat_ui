@@ -1,8 +1,8 @@
+import 'package:chat_ui/data/chat.dart';
 import 'package:chat_ui/models/user.dart';
 import 'package:chat_ui/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import '../data/users.dart';
 
 // ignore: must_be_immutable
 class FavoriteContacts extends StatelessWidget {

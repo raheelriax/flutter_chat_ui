@@ -1,3 +1,4 @@
+import 'package:chat_ui/data/chat.dart';
 import 'package:chat_ui/data/users.dart';
 import 'package:chat_ui/models/chat.dart';
 import 'package:chat_ui/models/message.dart';
@@ -15,59 +16,62 @@ class Conversation extends StatefulWidget {
 }
 
 class _ConversationState extends State<Conversation> {
-  @override
-  Widget build(BuildContext context) {
-    final Chat chat =
-        chats.firstWhere((current) => current.sender.name == widget.user.name);
-    return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
-      appBar: AppBar(
-        title: Center(
-          child: Text(
-            widget.user.name,
-            style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
+  Widget _buildAppBar() {
+    return AppBar(
+      title: Center(
+        child: Text(
+          widget.user.name,
+          style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.more_horiz),
-            iconSize: 30,
-            color: Colors.white,
-            onPressed: () {},
-          )
-        ],
       ),
-      body: GestureDetector(
-        onTap: ()=>FocusScope.of(context).unfocus(),
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30))),
-                child: ClipRRect(
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.more_horiz),
+          iconSize: 30,
+          color: Colors.white,
+          onPressed: () {},
+        )
+      ],
+    );
+  }
+
+  Widget _buildConversationList() {
+    final Chat activeChat =
+        chats.firstWhere((current) => current.sender.name == widget.user.name);
+    return ListView.builder(
+        reverse: true,
+        padding: EdgeInsets.only(top: 15.0),
+        itemCount: activeChat.messages.length,
+        itemBuilder: (BuildContext chatContext, int index) {
+          final Message message = activeChat.messages[index];
+          bool isMe = message.sender.id == currentUser.id;
+          return _buildMessage(message, isMe);
+        });
+  }
+
+  Widget _buildBody() {
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Column(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.white,
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30)),
-                  child: ListView.builder(
-                      reverse: true,
-                      padding: EdgeInsets.only(top: 15.0),
-                      itemCount: chat.messages.length,
-                      itemBuilder: (BuildContext chatContext, int index) {
-                        final Message message = chat.messages[index];
-                        bool isMe = message.sender.id == currentUser.id;
-                        return _buildMessage(message, isMe);
-                      }),
-                ),
+                      topRight: Radius.circular(30))),
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30)),
+                child: _buildConversationList(),
               ),
             ),
-            _buildMessageComposer(),
-          ],
-        ),
+          ),
+          _buildMessageComposer(),
+        ],
       ),
     );
   }
@@ -106,9 +110,11 @@ class _ConversationState extends State<Conversation> {
         ],
       ),
     );
+
     if (isMe) {
       return messageTile;
     }
+
     return Row(
       children: <Widget>[
         messageTile,
@@ -139,13 +145,14 @@ class _ConversationState extends State<Conversation> {
             color: Theme.of(context).primaryColor,
             onPressed: () {},
           ),
-          Expanded(child: TextField(
-            textCapitalization: TextCapitalization.sentences,
-            onChanged: (value){
-
-            },
-            decoration: InputDecoration.collapsed(hintText: 'Send a message...'),
-          ),),
+          Expanded(
+            child: TextField(
+              textCapitalization: TextCapitalization.sentences,
+              onChanged: (value) {},
+              decoration:
+                  InputDecoration.collapsed(hintText: 'Send a message...'),
+            ),
+          ),
           IconButton(
             icon: Icon(Icons.send),
             iconSize: 25,
@@ -154,6 +161,15 @@ class _ConversationState extends State<Conversation> {
           )
         ],
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).primaryColor,
+      appBar: _buildAppBar(),
+      body: _buildBody(),
     );
   }
 }
