@@ -1,4 +1,4 @@
-# first_app
+# number_trivia
 
 A new Flutter project.
 
