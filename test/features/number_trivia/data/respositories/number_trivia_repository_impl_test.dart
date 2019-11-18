@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:number_trivia/core/error/exceptions.dart';
 import 'package:number_trivia/core/error/failure.dart';
-import 'package:number_trivia/core/platform/network_info.dart';
+import 'package:number_trivia/core/network/network_info.dart';
 import 'package:number_trivia/features/number_trivia/data/datasource/number_trivia_local_data_source.dart';
 import 'package:number_trivia/features/number_trivia/data/datasource/number_trivia_remote_data_source.dart';
 import 'package:number_trivia/features/number_trivia/data/models/number_trivia_model.dart';
@@ -99,7 +99,7 @@ void main() {
       });
       test('Should return cached failure if no data present', () async {
         when(localDataSource.getLastNumberTrivia())
-            .thenThrow((CachedException()));
+            .thenThrow((CacheException()));
         final result = await repository.getConcreteNumberTrivia(tNumber);
         verifyZeroInteractions(remoteDataSource);
         verify(localDataSource.getLastNumberTrivia());
@@ -159,7 +159,7 @@ void main() {
       });
       test('Should return cached failure if no data present', () async {
         when(localDataSource.getLastNumberTrivia())
-            .thenThrow((CachedException()));
+            .thenThrow((CacheException()));
         final result = await repository.getRandomTrivia();
         verifyZeroInteractions(remoteDataSource);
         verify(localDataSource.getLastNumberTrivia());
